@@ -43,6 +43,12 @@ public class Release {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        releaseDate = LocalDate.now();
+    }
+
     @OneToMany(mappedBy = "release", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChangelogEntry> changelogEntries = new ArrayList<>();
 }
