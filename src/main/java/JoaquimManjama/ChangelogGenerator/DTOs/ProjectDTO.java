@@ -1,6 +1,6 @@
 package JoaquimManjama.ChangelogGenerator.DTOs;
 
-import JoaquimManjama.ChangelogGenerator.Entities.Project;
+import JoaquimManjama.ChangelogGenerator.Models.Project;
 
 import java.time.LocalDateTime;
 

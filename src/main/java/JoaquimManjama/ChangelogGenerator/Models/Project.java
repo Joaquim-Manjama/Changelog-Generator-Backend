@@ -1,4 +1,4 @@
-package JoaquimManjama.ChangelogGenerator.Entities;
+package JoaquimManjama.ChangelogGenerator.Models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
