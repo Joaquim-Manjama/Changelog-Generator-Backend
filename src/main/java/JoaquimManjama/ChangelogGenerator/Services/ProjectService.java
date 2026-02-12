@@ -27,7 +27,6 @@ public class ProjectService {
             project.setUser(user.get());
             projectRepository.save(project);
         }
-
         return new ProjectDTO(project);
     }
 
@@ -40,7 +39,6 @@ public class ProjectService {
                     .map(ProjectDTO::new)
                     .collect(Collectors.toList());
         }
-
         return null;
     }
 }

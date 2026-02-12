@@ -1,5 +1,7 @@
 package JoaquimManjama.ChangelogGenerator.Services;
 
+import JoaquimManjama.ChangelogGenerator.DTOs.LoginRequestDTO;
+import JoaquimManjama.ChangelogGenerator.DTOs.RegisterRequestDTO;
 import JoaquimManjama.ChangelogGenerator.Models.User;
 import JoaquimManjama.ChangelogGenerator.Repositories.UserRepository;
 import JoaquimManjama.ChangelogGenerator.Security.JwtUtil;
@@ -15,35 +17,34 @@ public class AuthService{
     @Autowired
     private UserRepository repository;
 
+    @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public String register(User possibleUser) {
-        Optional<User> user = repository.findByEmail(possibleUser.getEmail());
+    public String register(RegisterRequestDTO request) {
+        Optional<User> possibleUser = repository.findByEmail(request.email());
 
-        if(user.isEmpty()){
-            String encryptedPassword = passwordEncoder.encode(possibleUser.getPassword());
-            User newUser = new User(possibleUser.getEmail(), encryptedPassword, possibleUser.getFirstName(), possibleUser.getLastName());
+        if(possibleUser.isEmpty()){
+            String encryptedPassword = passwordEncoder.encode(request.password());
+            User newUser = new User(request.email(), encryptedPassword, request.firstName(), request.lastName());
             repository.save(newUser);
-            return jwtUtil.generateToken(possibleUser.getEmail());
+            return jwtUtil.generateToken(request.email());
         }
-
         return null;
     }
 
-    public String login(String email, String password) {
-
-        Optional<User> possibleUser = repository.findByEmail(email);
+    public String login(LoginRequestDTO request) {
+        Optional<User> possibleUser = repository.findByEmail(request.email());
 
         if (possibleUser.isPresent()){
             User user = possibleUser.get();
             String userPassword = user.getPassword();
 
-            if (passwordEncoder.matches(password,userPassword)){
-                return jwtUtil.generateToken(email);
+            if (passwordEncoder.matches(request.password(),userPassword)){
+                return jwtUtil.generateToken(request.email());
             }
-
             return null;
         }
         return null;
