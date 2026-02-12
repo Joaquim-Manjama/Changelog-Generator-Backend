@@ -46,7 +46,7 @@ public class UserService {
 
     public UserDTO getUserByEmail(String email) {
         try {
-            User user = repository.getByEmail(email);
+            User user = repository.findByEmail(email).get();
             return new UserDTO(user);
 
         } catch (Exception e) {
