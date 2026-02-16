@@ -5,10 +5,8 @@ import JoaquimManjama.ChangelogGenerator.DTOs.LoginRequestDTO;
 import JoaquimManjama.ChangelogGenerator.DTOs.RegisterRequestDTO;
 import JoaquimManjama.ChangelogGenerator.Services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -20,12 +18,13 @@ public class AuthControler {
     @PostMapping("/register")
     public AuthResponseDTO register(@RequestBody RegisterRequestDTO request) {
         String token = service.register(request);
-        return token == null ? null : new AuthResponseDTO(token);
+        return token == null ? null : new AuthResponseDTO(token, request.email());
     }
 
     @PostMapping("/login")
-    public AuthResponseDTO login(@RequestBody LoginRequestDTO request) {
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO request) {
         String token = service.login(request);
-        return token == null ? null : new AuthResponseDTO(token);
+        //return token == null ? null : new AuthResponseDTO(token, request.email());
+        return token == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(new AuthResponseDTO(token, request.email()));
     }
 }

@@ -24,29 +24,39 @@ public class AuthService{
     private PasswordEncoder passwordEncoder;
 
     public String register(RegisterRequestDTO request) {
+        // Try to get user
         Optional<User> possibleUser = repository.findByEmail(request.email());
 
+        // Check if user does not exist
         if(possibleUser.isEmpty()){
+            // If user does not exist
             String encryptedPassword = passwordEncoder.encode(request.password());
             User newUser = new User(request.email(), encryptedPassword, request.firstName(), request.lastName());
             repository.save(newUser);
             return jwtUtil.generateToken(request.email());
         }
-        return null;
+
+        throw new RuntimeException("User already exists!");
     }
 
     public String login(LoginRequestDTO request) {
+        // Try to get user
         Optional<User> possibleUser = repository.findByEmail(request.email());
 
+        // Check if user exists
         if (possibleUser.isPresent()){
+            // User found
             User user = possibleUser.get();
             String userPassword = user.getPassword();
 
+            // Check if passwords match
             if (passwordEncoder.matches(request.password(),userPassword)){
                 return jwtUtil.generateToken(request.email());
             }
-            return null;
+
+            throw new RuntimeException("Password is incorrect!");
         }
-        return null;
+
+        throw new RuntimeException("User not found!");
     }
 }
