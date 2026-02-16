@@ -12,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -28,55 +30,54 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     UserRepository repository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
 
-        // Get authorization header from request
-        final String authHeader = request.getHeader("Authorization");
+        System.out.println("=== JWT Filter Started ===");
 
-        // Check if the header exists and starts with "Bearer "
+        String authHeader = request.getHeader("Authorization");
+        System.out.println("Authorization Header: " + authHeader);
+
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            // No token found
+            System.out.println("No valid Authorization header, skipping...");
             filterChain.doFilter(request, response);
             return;
         }
 
-        // Extract the token
-        final String authToken = authHeader.substring(7);
+        String jwt = authHeader.substring(7);
+        System.out.println("Extracted JWT: " + jwt);
 
-        final String userEmail;
-        try {
-            userEmail = jwtUtil.extractEmail(authToken);
-        } catch (Exception e) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        String email = jwtUtil.extractEmail(jwt);
+        System.out.println("Extracted Email: " + email);
 
-        // Check if we got an email and user is not already authenticated
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            System.out.println("Loading user from database...");
 
-            // Load user from database
-            Optional<User> possibleUser = repository.findByEmail(userEmail);
-            User user = possibleUser.isPresent() ? possibleUser.get() : null;
+            User user = repository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
-            // Stop here if user doesnt exist in database
-            if (user == null) {
-                filterChain.doFilter(request, response);
-                return;
-            }
+            System.out.println("User found: " + user.getEmail());
 
-            // Validate the token
-            if (jwtUtil.validateToken(authToken, user.getEmail())) {
-                // Token is valid
+            if (jwtUtil.validateToken(jwt, user.getEmail())) {
+                System.out.println("Token is valid!");
 
-                // Create authentication object
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-
-                // Set additional details
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                user,
+                                null,
+                                user.getAuthorities()
+                        );
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                System.out.println("Authentication set in SecurityContext");
+            } else {
+                System.out.println("Token validation failed!");
             }
         }
+
+        System.out.println("=== JWT Filter Ended ===");
         filterChain.doFilter(request, response);
     }
 }
