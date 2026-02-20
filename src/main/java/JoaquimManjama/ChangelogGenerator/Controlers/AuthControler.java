@@ -9,6 +9,7 @@ import JoaquimManjama.ChangelogGenerator.DTOs.RegisterRequestDTO;
 import JoaquimManjama.ChangelogGenerator.DTOs.UserDTO;
 import JoaquimManjama.ChangelogGenerator.Models.User;
 import JoaquimManjama.ChangelogGenerator.Services.AuthService;
+import JoaquimManjama.ChangelogGenerator.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,17 +22,21 @@ public class AuthControler {
     @Autowired
     AuthService service;
 
+    @Autowired
+    UserService userService;
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequestDTO request) {
         String token = service.register(request);
-        AuthResponseDTO response = new AuthResponseDTO(token, request.email());
+        AuthResponseDTO response = new AuthResponseDTO(request.firstName(), request.lastName(), request.email(), token);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
         String token = service.login(request);
-        AuthResponseDTO response = new AuthResponseDTO(token, request.email());
+        UserDTO user = userService.getUserByEmail(request.email());
+        AuthResponseDTO response = new AuthResponseDTO(user.getFirstName(), user.getLastName(), request.email(), token);
         return ResponseEntity.ok(response);
     }
 
