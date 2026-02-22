@@ -44,10 +44,9 @@ public class AuthControler {
     public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal User user) {
         // Create a response without password
         Map<String, Object> response = new HashMap<>();
-        response.put("id", user.getId());
         response.put("email", user.getEmail());
-        response.put("name", user.getFirstName());
-        response.put("surname", user.getFirstName());
+        response.put("firstName", user.getFirstName());
+        response.put("lastName", user.getLastName());
         return ResponseEntity.ok(response);
     }
 }
