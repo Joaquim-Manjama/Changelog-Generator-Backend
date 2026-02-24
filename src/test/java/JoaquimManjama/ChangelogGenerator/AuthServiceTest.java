@@ -51,7 +51,7 @@ class AuthServiceTest {
 
         // When: Register user
         String token = authService.register(request);
-        AuthResponseDTO response = new AuthResponseDTO(token, request.email());
+        AuthResponseDTO response = new AuthResponseDTO(request.firstName(), request.lastName(), request.email(), token);
 
         // Then: Should return valid response
         assertNotNull(response, "Response should not be null");
@@ -98,7 +98,7 @@ class AuthServiceTest {
         LoginRequestDTO loginRequest = new LoginRequestDTO("user@example.com", "correctpassword");
 
         String token = authService.login(loginRequest);
-        AuthResponseDTO response = new AuthResponseDTO(token, loginRequest.email());
+        AuthResponseDTO response = new AuthResponseDTO(user.getFirstName(), user.getLastName(), loginRequest.email(), token);
 
         // Then: Should return valid response
         assertNotNull(response);
