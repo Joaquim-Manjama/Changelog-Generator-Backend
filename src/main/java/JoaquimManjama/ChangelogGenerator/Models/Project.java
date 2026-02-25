@@ -1,10 +1,7 @@
 package JoaquimManjama.ChangelogGenerator.Models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +13,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 public class Project {
 
     @Id
@@ -32,7 +30,7 @@ public class Project {
     @JoinColumn(name = "user_id",  nullable = false)
     private User user;
 
-    @Column(nullable = false, length = 200)
+    @Column(length = 200)
     private String githubRepo;
 
     @Column(nullable = false)

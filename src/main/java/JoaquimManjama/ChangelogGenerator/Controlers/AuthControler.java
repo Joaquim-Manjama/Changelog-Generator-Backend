@@ -42,7 +42,6 @@ public class AuthControler {
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal User user) {
-        // Create a response without password
         Map<String, Object> response = new HashMap<>();
         response.put("email", user.getEmail());
         response.put("firstName", user.getFirstName());

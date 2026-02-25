@@ -1,44 +1,76 @@
 package JoaquimManjama.ChangelogGenerator.Services;
 
 import JoaquimManjama.ChangelogGenerator.DTOs.ProjectDTO;
+import JoaquimManjama.ChangelogGenerator.DTOs.ProjectRequestDTO;
 import JoaquimManjama.ChangelogGenerator.Models.Project;
 import JoaquimManjama.ChangelogGenerator.Models.User;
 import JoaquimManjama.ChangelogGenerator.Repositories.ProjectRepository;
-import JoaquimManjama.ChangelogGenerator.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
 
     @Autowired
-    ProjectRepository projectRepository;
+    ProjectRepository repository;
 
-    @Autowired
-    UserRepository userRepository;
+    public Project addProject(User user, ProjectRequestDTO projectRequestDTO) {
+        Project project = new Project();
+        project.setName(projectRequestDTO.name());
+        project.setSlug(projectRequestDTO.slug());
+        project.setGithubRepo(projectRequestDTO.githubRepo());
+        project.setUser(user);
 
-    public ProjectDTO addProject(Long user_id, Project project) {
-        Optional<User> user = userRepository.findById(user_id);
-        if (user.isPresent()) {
-            project.setUser(user.get());
-            projectRepository.save(project);
-        }
-        return new ProjectDTO(project);
+        repository.save(project);
+        return project;
     }
 
-    public List<ProjectDTO> getUserProjects(long user_id) {
-        Optional<User> user = userRepository.findById(user_id);
+    public List<ProjectDTO> getProjects(User user) {
+        List<Project> userProjects = repository.findByUserId(user.getId());
 
-        if (user.isPresent()) {
-            List<Project> projects = user.get().getProjects();
-            return projects.stream()
-                    .map(ProjectDTO::new)
-                    .collect(Collectors.toList());
+        List<ProjectDTO> projects = userProjects.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+
+        return projects;
+    }
+
+    public ProjectDTO getProject(User user, Long id) {
+        Project project = repository.findByUserIdAndId(user.getId(), id);
+        return convertToDTO(project);
+    }
+
+    public ProjectDTO convertToDTO(Project project) {
+        return new ProjectDTO(project.getId(), project.getName(), project.getSlug(), project.getUser().getId(), project.getGithubRepo());
+    }
+
+    public ProjectDTO updateProject(ProjectRequestDTO projectRequest, Long userId, Long id) {
+        Project project = repository.findByUserIdAndId(userId, id);
+
+        if (project != null) {
+
+            project.setName(projectRequest.name());
+            project.setSlug(projectRequest.slug());
+            project.setGithubRepo(projectRequest.githubRepo());
+
+            repository.save(project);
+            return  convertToDTO(project);
         }
+
+        return null;
+    }
+
+    public ProjectDTO deleteProject(Long userId, Long id) {
+        Project project = repository.findByUserIdAndId(userId, id);
+
+        if  (project != null) {
+            repository.deleteById(id);
+            return convertToDTO(project);
+        }
+
         return null;
     }
 }

@@ -53,10 +53,8 @@ public class AuthService{
             if (passwordEncoder.matches(request.password(),userPassword)){
                 return jwtUtil.generateToken(request.email());
             }
-
             throw new RuntimeException("Password is incorrect!");
         }
-
         throw new RuntimeException("User not found!");
     }
 }

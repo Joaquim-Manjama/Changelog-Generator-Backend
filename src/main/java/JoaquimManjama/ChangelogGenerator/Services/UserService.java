@@ -25,7 +25,7 @@ public class UserService {
 
         try{
             List<User> users = repository.findAll();
-            return users.stream().map(UserDTO::new).collect(Collectors.toList());
+            return users.stream().map(this::convertToDTO).collect(Collectors.toList());
 
         } catch(Exception e){
             return null;
@@ -35,7 +35,7 @@ public class UserService {
     public UserDTO getUserById(long id) {
         try {
             Optional<User> user = repository.findById(id);
-            return user.isPresent() ? new UserDTO(user.get()) : null;
+            return user.isPresent() ? convertToDTO(user.get()) : null;
 
         } catch (Exception e) {
             return null;
@@ -45,10 +45,14 @@ public class UserService {
     public UserDTO getUserByEmail(String email) {
         try {
             User user = repository.findByEmail(email).get();
-            return new UserDTO(user);
+            return convertToDTO(user);
 
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public UserDTO convertToDTO(User user) {
+        return new UserDTO(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getProjects());
     }
 }
