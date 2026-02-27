@@ -36,7 +36,7 @@ public class AuthControler {
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
         String token = service.login(request);
         UserDTO user = userService.getUserByEmail(request.email());
-        AuthResponseDTO response = new AuthResponseDTO(user.getFirstName(), user.getLastName(), request.email(), token);
+        AuthResponseDTO response = new AuthResponseDTO(user.firstName(), user.lastName(), request.email(), token);
         return ResponseEntity.ok(response);
     }
 

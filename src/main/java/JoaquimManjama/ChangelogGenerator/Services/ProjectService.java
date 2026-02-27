@@ -17,7 +17,7 @@ public class ProjectService {
     @Autowired
     ProjectRepository repository;
 
-    public Project addProject(User user, ProjectRequestDTO projectRequestDTO) {
+    public ProjectDTO addProject(User user, ProjectRequestDTO projectRequestDTO) {
         Project project = new Project();
         project.setName(projectRequestDTO.name());
         project.setSlug(projectRequestDTO.slug());
@@ -25,7 +25,7 @@ public class ProjectService {
         project.setUser(user);
 
         repository.save(project);
-        return project;
+        return convertToDTO(project);
     }
 
     public List<ProjectDTO> getProjects(User user) {
@@ -44,7 +44,7 @@ public class ProjectService {
     }
 
     public ProjectDTO convertToDTO(Project project) {
-        return new ProjectDTO(project.getId(), project.getName(), project.getSlug(), project.getUser().getId(), project.getGithubRepo());
+        return new ProjectDTO(project.getId(), project.getName(), project.getSlug(), project.getGithubRepo());
     }
 
     public ProjectDTO updateProject(ProjectRequestDTO projectRequest, Long userId, Long id) {

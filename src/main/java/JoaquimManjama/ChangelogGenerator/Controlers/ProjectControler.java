@@ -21,9 +21,8 @@ public class ProjectControler {
     // Create a project
     @PostMapping("new")
     public ResponseEntity<?> createProject(@RequestBody ProjectRequestDTO projectRequestDTO, @AuthenticationPrincipal User user) {
-        Project project = service.addProject(user, projectRequestDTO);
-        ProjectDTO response = new ProjectDTO(project.getId(), project.getName(), project.getSlug(), project.getUser().getId(), project.getGithubRepo());
-        return ResponseEntity.ok(response);
+        ProjectDTO project = service.addProject(user, projectRequestDTO);
+        return ResponseEntity.ok(project);
     }
 
     // Get all users projects
