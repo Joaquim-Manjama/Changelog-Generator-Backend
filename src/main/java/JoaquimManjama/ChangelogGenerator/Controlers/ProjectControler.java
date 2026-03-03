@@ -19,7 +19,7 @@ public class ProjectControler {
     private ProjectService service;
 
     // Create a project
-    @PostMapping("new")
+    @PostMapping("/new")
     public ResponseEntity<?> createProject(@RequestBody ProjectRequestDTO projectRequestDTO, @AuthenticationPrincipal User user) {
         ProjectDTO project = service.addProject(user, projectRequestDTO);
         return ResponseEntity.ok(project);

@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
-    public List<Project> findByUserId(Long userId);
+    public List<Project> findByUserIdOrderByIdAsc(Long userId);
     public Project findByUserIdAndId(Long userId, Long id);
 }

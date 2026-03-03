@@ -29,7 +29,7 @@ public class ProjectService {
     }
 
     public List<ProjectDTO> getProjects(User user) {
-        List<Project> userProjects = repository.findByUserId(user.getId());
+        List<Project> userProjects = repository.findByUserIdOrderByIdAsc(user.getId());
 
         List<ProjectDTO> projects = userProjects.stream()
                 .map(this::convertToDTO)
