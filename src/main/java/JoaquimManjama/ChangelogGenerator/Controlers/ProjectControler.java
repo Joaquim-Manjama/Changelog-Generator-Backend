@@ -2,7 +2,6 @@ package JoaquimManjama.ChangelogGenerator.Controlers;
 
 import JoaquimManjama.ChangelogGenerator.DTOs.ProjectDTO;
 import JoaquimManjama.ChangelogGenerator.DTOs.ProjectRequestDTO;
-import JoaquimManjama.ChangelogGenerator.Models.Project;
 import JoaquimManjama.ChangelogGenerator.Models.User;
 import JoaquimManjama.ChangelogGenerator.Services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
