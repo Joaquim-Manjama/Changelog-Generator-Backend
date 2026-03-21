@@ -21,8 +21,8 @@ import java.util.List;
 public class Release {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @ManyToOne
     @JoinColumn(name="project_id",  nullable=false)

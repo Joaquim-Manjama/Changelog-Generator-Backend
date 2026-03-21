@@ -7,8 +7,10 @@ import JoaquimManjama.ChangelogGenerator.Models.User;
 import JoaquimManjama.ChangelogGenerator.Repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,20 +40,26 @@ public class ProjectService {
         return projects;
     }
 
-    public ProjectDTO getProject(User user, Long id) {
-        Project project = repository.findByUserIdAndId(user.getId(), id);
-        return convertToDTO(project);
+    public ProjectDTO getProject(String id) {
+        Optional<Project> possibleProject = repository.findById(id);
+
+        if (possibleProject.isPresent()) {
+            Project project = possibleProject.get();
+            return convertToDTO(project);
+        }
+
+        return null;
     }
 
     public ProjectDTO convertToDTO(Project project) {
         return new ProjectDTO(project.getId(), project.getName(), project.getSlug(), project.getGithubRepo());
     }
 
-    public ProjectDTO updateProject(ProjectRequestDTO projectRequest, Long userId, Long id) {
-        Project project = repository.findByUserIdAndId(userId, id);
+    public ProjectDTO updateProject(ProjectRequestDTO projectRequest, String id) {
+        Optional<Project> possibleProject = repository.findById(id);
 
-        if (project != null) {
-
+        if (possibleProject.isPresent()) {
+            Project project = possibleProject.get();
             project.setName(projectRequest.name());
             project.setSlug(projectRequest.slug());
             project.setGithubRepo(projectRequest.githubRepo());
@@ -63,10 +71,12 @@ public class ProjectService {
         return null;
     }
 
-    public ProjectDTO deleteProject(Long userId, Long id) {
-        Project project = repository.findByUserIdAndId(userId, id);
+    @Transactional
+    public ProjectDTO deleteProject(String id) {
+        Optional<Project> possibleProject = repository.findById(id);
 
-        if  (project != null) {
+        if  (possibleProject.isPresent()) {
+            Project project = possibleProject.get();
             repository.deleteById(id);
             return convertToDTO(project);
         }

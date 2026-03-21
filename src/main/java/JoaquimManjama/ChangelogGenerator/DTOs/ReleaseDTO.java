@@ -1,4 +1,6 @@
 package JoaquimManjama.ChangelogGenerator.DTOs;
 
-public record ReleaseDTO(Long id, String version, String description) {
+import java.time.LocalDateTime;
+
+public record ReleaseDTO(String id, String version, String description, LocalDateTime createdAt) {
 }

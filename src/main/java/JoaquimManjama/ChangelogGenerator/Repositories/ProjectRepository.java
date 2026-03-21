@@ -4,9 +4,13 @@ import JoaquimManjama.ChangelogGenerator.Models.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
-    public List<Project> findByUserIdOrderByIdAsc(Long userId);
-    public Project findByUserIdAndId(Long userId, Long id);
+    List<Project> findByUserIdOrderByIdAsc(String userId);
+
+    Optional<Project> findById(String id);
+
+    void deleteById(String id);
 }

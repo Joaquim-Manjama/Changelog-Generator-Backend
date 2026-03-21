@@ -21,7 +21,7 @@ public class UserControler {
     }
 
     @GetMapping("/id{id}")
-    public UserDTO getUserById(@RequestParam long id) {
+    public UserDTO getUserById(@RequestParam String id) {
         return service.getUserById(id);
     }
 

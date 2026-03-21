@@ -2,7 +2,6 @@ package JoaquimManjama.ChangelogGenerator.Controlers;
 
 import JoaquimManjama.ChangelogGenerator.DTOs.ReleaseDTO;
 import JoaquimManjama.ChangelogGenerator.DTOs.ReleaseRequestDTO;
-import JoaquimManjama.ChangelogGenerator.Models.Release;
 import JoaquimManjama.ChangelogGenerator.Models.User;
 import JoaquimManjama.ChangelogGenerator.Services.ReleaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +19,26 @@ public class ReleaseController {
     private ReleaseService service;
 
     @PostMapping("/releases/new")
-    public ResponseEntity<?> release(@AuthenticationPrincipal User user, @RequestBody ReleaseRequestDTO releaseRequestDTO) {
-        ReleaseDTO release = service.createRelease(releaseRequestDTO, user);
+    public ResponseEntity<?> createRelease(@AuthenticationPrincipal User user, @RequestBody ReleaseRequestDTO releaseRequestDTO) {
+        ReleaseDTO release = service.createRelease(releaseRequestDTO);
         return ResponseEntity.ok().body(release);
     }
 
-    @GetMapping("/{id}/releases/all")
-    public ResponseEntity<?> getAllReleases(@AuthenticationPrincipal User user, @PathVariable Long id) {
-        List<ReleaseDTO> releases = service.getReleases(user, id);
+    @GetMapping("/{projectId}/releases/all")
+    public ResponseEntity<?> getAllReleases(@AuthenticationPrincipal User user, @PathVariable String projectId) {
+        List<ReleaseDTO> releases = service.getReleases(projectId);
         return ResponseEntity.ok().body(releases);
+    }
+
+    @PutMapping("/releases/update/{id}")
+    public ResponseEntity<?> updateRelease(@AuthenticationPrincipal User user,  @RequestBody ReleaseRequestDTO releaseRequestDTO,  @PathVariable String id) {
+        ReleaseDTO release = service.updateRelease(releaseRequestDTO,id);
+        return ResponseEntity.ok().body(release);
+    }
+
+    @DeleteMapping("/releases/delete/{id}")
+    public ResponseEntity<?> deleteRelease(@AuthenticationPrincipal User user, @PathVariable Long projectId, @PathVariable String id) {
+        ReleaseDTO release = service.deleteRelease(id);
+        return ResponseEntity.ok().body(release);
     }
 }

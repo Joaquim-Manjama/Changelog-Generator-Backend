@@ -32,10 +32,10 @@ public class UserService {
         }
     }
 
-    public UserDTO getUserById(long id) {
+    public UserDTO getUserById(String id) {
         try {
             Optional<User> user = repository.findById(id);
-            return user.isPresent() ? convertToDTO(user.get()) : null;
+            return user.map(this::convertToDTO).orElse(null);
 
         } catch (Exception e) {
             return null;

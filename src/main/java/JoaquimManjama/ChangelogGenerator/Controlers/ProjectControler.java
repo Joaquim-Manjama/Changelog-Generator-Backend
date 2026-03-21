@@ -33,22 +33,22 @@ public class ProjectControler {
 
     // Get a single project
     @GetMapping("/get/{id}")
-    public ResponseEntity<?> getProject(@AuthenticationPrincipal User user, @PathVariable Long id) {
-        ProjectDTO project = service.getProject(user, id);
+    public ResponseEntity<?> getProject(@AuthenticationPrincipal User user, @PathVariable String id) {
+        ProjectDTO project = service.getProject(id);
         return ResponseEntity.ok(project);
     }
 
     // Update a project
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateProject(@AuthenticationPrincipal User user, @RequestBody ProjectRequestDTO projectRequest, @PathVariable Long id) {
-        ProjectDTO project = service.updateProject(projectRequest, user.getId(), id);
+    public ResponseEntity<?> updateProject(@AuthenticationPrincipal User user, @RequestBody ProjectRequestDTO projectRequest, @PathVariable String id) {
+        ProjectDTO project = service.updateProject(projectRequest, id);
         return ResponseEntity.ok(project);
     }
 
     // Delete a Project
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteProject(@AuthenticationPrincipal User user, @PathVariable Long id) {
-        ProjectDTO project = service.deleteProject(user.getId(), id);
+    public ResponseEntity<?> deleteProject(@AuthenticationPrincipal User user, @PathVariable String id) {
+        ProjectDTO project = service.deleteProject(id);
         return ResponseEntity.ok(project);
     }
 }
