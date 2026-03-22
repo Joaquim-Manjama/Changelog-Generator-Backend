@@ -85,22 +85,28 @@ public class ReleaseService {
         return null;
     }
 
+    @Transactional
     public ReleaseDTO toggleReleaseStatus(String id) {
         Optional<Release> possibleRelease = repository.findById(id);
 
         if (possibleRelease.isPresent()) {
+            System.out.println("Found the original release!");
             Release release = possibleRelease.get();
 
+            System.out.println("Figuring out what status it will become next!");
             if ("DRAFT".equals(release.getStatus().toString())) {
               release.setStatus(ReleaseStatus.PUBLISHED);
+              System.out.println("Changed release " + release.getVersion() +" status from DRAFT to PUBLISHED!");
             } else {
                 release.setStatus(ReleaseStatus.DRAFT);
+                System.out.println("Changed release " + release.getVersion() +" status from PUBLISHED to DRAFT!");
             }
 
             repository.save(release);
             return convertToDTO(release);
         }
 
+        System.out.println("Something went wrong!");
         return null;
     }
 }

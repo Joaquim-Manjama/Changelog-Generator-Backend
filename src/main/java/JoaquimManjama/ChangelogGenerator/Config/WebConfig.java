@@ -16,7 +16,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addMapping("/projects/**")
                 .allowedOrigins("http://localhost:5173")  // Your React app URLs
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }
