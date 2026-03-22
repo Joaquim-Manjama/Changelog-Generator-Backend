@@ -38,7 +38,7 @@ public class Release {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    private ReleaseStatus status;
+    private ReleaseStatus status =  ReleaseStatus.DRAFT;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

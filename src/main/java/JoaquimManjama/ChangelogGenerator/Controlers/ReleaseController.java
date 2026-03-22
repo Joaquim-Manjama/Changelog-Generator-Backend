@@ -30,15 +30,21 @@ public class ReleaseController {
         return ResponseEntity.ok().body(releases);
     }
 
-    @PutMapping("/releases/update/{id}")
-    public ResponseEntity<?> updateRelease(@AuthenticationPrincipal User user,  @RequestBody ReleaseRequestDTO releaseRequestDTO,  @PathVariable String id) {
-        ReleaseDTO release = service.updateRelease(releaseRequestDTO,id);
+    @PutMapping("/releases/update")
+    public ResponseEntity<?> updateRelease(@AuthenticationPrincipal User user,  @RequestBody ReleaseRequestDTO releaseRequestDTO) {
+        ReleaseDTO release = service.updateRelease(releaseRequestDTO);
         return ResponseEntity.ok().body(release);
     }
 
     @DeleteMapping("/releases/delete/{id}")
-    public ResponseEntity<?> deleteRelease(@AuthenticationPrincipal User user, @PathVariable Long projectId, @PathVariable String id) {
+    public ResponseEntity<?> deleteRelease(@AuthenticationPrincipal User user, @PathVariable String id) {
         ReleaseDTO release = service.deleteRelease(id);
+        return ResponseEntity.ok().body(release);
+    }
+
+    @PatchMapping("/release/publish/{id}")
+    public ResponseEntity<?> toggleReleaseStatus(@AuthenticationPrincipal User user, @PathVariable String id) {
+        ReleaseDTO release = service.toggleReleaseStatus(id);
         return ResponseEntity.ok().body(release);
     }
 }
