@@ -16,8 +16,8 @@ import lombok.Setter;
 public class ChangelogEntry {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "release_id", nullable = false)
@@ -25,9 +25,6 @@ public class ChangelogEntry {
 
     @Enumerated(EnumType.STRING)
     private EntryCategory category;
-
-    @Column(nullable = false, length = 255)
-    private String title;
 
     @Column(length = 1000)
     private String description;

@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
 public class Subscriber {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "project_id",  nullable = false)
