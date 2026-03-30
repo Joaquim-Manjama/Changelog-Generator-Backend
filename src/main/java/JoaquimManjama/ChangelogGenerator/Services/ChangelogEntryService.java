@@ -87,7 +87,7 @@ public class ChangelogEntryService {
     }
 
     public ChangelogEntryDTO convertToDTO(ChangelogEntry changelogEntry) {
-        return new ChangelogEntryDTO(changelogEntry.getId(),  changelogEntry.getDescription(), changelogEntry.getDisplayOrder());
+        return new ChangelogEntryDTO(changelogEntry.getId(),  changelogEntry.getDescription(), changelogEntry.getDisplayOrder(), changelogEntry.getCategory().toString());
     }
 
 
