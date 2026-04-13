@@ -3,6 +3,7 @@ package JoaquimManjama.ChangelogGenerator.Services;
 import JoaquimManjama.ChangelogGenerator.Config.GitHubConfig;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -57,6 +58,22 @@ public class GitHubService {
 
     // Get user's Github username
     public String getGitHubUsername(String accessToken) {
-        return "";
+        String userUrl = "https://api.github.com/user";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+
+        HttpEntity<?> request = new HttpEntity<>(headers);
+
+        ResponseEntity<Map> response = restTemplate.exchange(
+                userUrl,
+                HttpMethod.GET,
+                request,
+                Map.class
+        );
+
+        Map<String, Object> body = response.getBody();
+
+        return (String) body.get("login");
     }
 }
