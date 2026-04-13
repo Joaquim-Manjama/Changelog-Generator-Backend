@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class GitHubConfig {
 
     @Value("${github.client.id}")
-    private String cliendId;
+    private String clientId;
 
     @Value("${github.client.secret}")
     private String clientSecret;

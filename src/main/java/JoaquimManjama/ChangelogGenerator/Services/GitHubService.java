@@ -15,7 +15,10 @@ public class GitHubService {
 
     // Generate the URL to redirect user to GitHub
     public String getAuthorizationUrl() {
-
+        return "https://github.com/login/oauth/authorize"
+                + "?client_id=" + gitHubConfig.getClientId()
+                + "&redirect_uri=" + gitHubConfig.getRedirectUri()
+                + "&scope=repo,read:user";
     }
 
     // Exchange code for access token
