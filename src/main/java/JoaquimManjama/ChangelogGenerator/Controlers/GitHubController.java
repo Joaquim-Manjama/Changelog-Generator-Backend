@@ -56,4 +56,9 @@ public class GitHubController {
                 .header("Location", "http://localhost:5173/dashboard?github=connected")
                 .build();
     }
+
+    @GetMapping("/status")
+    public ResponseEntity<?> status(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(Map.of("connected", user.getGithubConnected(), "username", user.getGithubUsername()));
+    }
 }
