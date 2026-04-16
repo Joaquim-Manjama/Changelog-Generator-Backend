@@ -1,6 +1,7 @@
 package JoaquimManjama.ChangelogGenerator.Controlers;
 
 import JoaquimManjama.ChangelogGenerator.Models.User;
+import JoaquimManjama.ChangelogGenerator.Repositories.UserRepository;
 import JoaquimManjama.ChangelogGenerator.Services.GitHubService;
 import JoaquimManjama.ChangelogGenerator.Services.UserService;
 import org.springframework.http.HttpStatus;
@@ -19,20 +20,24 @@ public class GitHubController {
 
     private final GitHubService service;
     private final UserService userService;
+    private final UserRepository userRepository;
 
-    public GitHubController(GitHubService service, UserService userService) {
+    public GitHubController(GitHubService service, UserService userService,  UserRepository userRepository) {
         this.service = service;
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/authorize")
-    public ResponseEntity<?> authorize() {
-        String authUrl = service.getAuthorizationUrl();
+    public ResponseEntity<?> authorize(@AuthenticationPrincipal User user) {
+        String authUrl = service.getAuthorizationUrl(user.getId());
         return ResponseEntity.ok(Map.of("url", authUrl));
     }
 
     @GetMapping("/callback")
-    public ResponseEntity<?> callback(@RequestParam String code, @AuthenticationPrincipal User user) {
+    public ResponseEntity<?> callback(@RequestParam String code, @RequestParam String state) {
+
+        User user = userRepository.findById(state).get();
 
         // Get access token
         String accessToken = service.getAccessToken(code);
@@ -48,7 +53,7 @@ public class GitHubController {
 
         // Redirect to frontend
         return ResponseEntity.status(HttpStatus.FOUND)
-                .header("Location", "http://localhost:5173/dashboard")
+                .header("Location", "http://localhost:5173/dashboard?github=connected")
                 .build();
     }
 }
