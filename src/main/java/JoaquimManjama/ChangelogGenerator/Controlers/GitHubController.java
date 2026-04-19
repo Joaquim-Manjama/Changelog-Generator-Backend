@@ -7,10 +7,7 @@ import JoaquimManjama.ChangelogGenerator.Services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -60,5 +57,16 @@ public class GitHubController {
     @GetMapping("/status")
     public ResponseEntity<?> status(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(Map.of("connected", user.getGithubConnected(), "username", user.getGithubUsername()));
+    }
+
+    @DeleteMapping("/disconect")
+    public ResponseEntity<?> disconect(@AuthenticationPrincipal User user) {
+        user.setGithubConnected(false);
+        user.setGithubUsername(null);
+        user.setGithubAccessToken(null);
+
+        userRepository.save(user);
+
+        return  ResponseEntity.ok(Map.of("message", "Disconnected"));
     }
 }

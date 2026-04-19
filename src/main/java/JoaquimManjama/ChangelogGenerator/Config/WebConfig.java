@@ -22,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addMapping("/github/**")
                 .allowedOrigins("http://localhost:5173")  // Your React app URLs
-                .allowedMethods("GET")
+                .allowedMethods("GET", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }
