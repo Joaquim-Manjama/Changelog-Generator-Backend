@@ -17,7 +17,7 @@ public class ChangelogEntryController {
     ChangelogEntryService service;
 
     @GetMapping("releases/{releaseId}/entries")
-    public ResponseEntity<?> getReleases(@PathVariable String releaseId) {
+    public ResponseEntity<?> getEntries(@PathVariable String releaseId) {
         List<ChangelogEntryDTO> entries = service.getEntries(releaseId);
         return ResponseEntity.ok().body(entries);
     }

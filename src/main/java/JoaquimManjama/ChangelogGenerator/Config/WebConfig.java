@@ -19,5 +19,11 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
                 .allowedHeaders("*")
                 .allowCredentials(true);
+
+        registry.addMapping("/github/**")
+                .allowedOrigins("http://localhost:5173")  // Your React app URLs
+                .allowedMethods("GET", "DELETE")
+                .allowedHeaders("*")
+                .allowCredentials(true);
     }
 }

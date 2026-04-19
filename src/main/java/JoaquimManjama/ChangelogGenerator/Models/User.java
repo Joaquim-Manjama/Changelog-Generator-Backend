@@ -48,6 +48,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Project> projects = new ArrayList<>();
 
+    private String githubAccessToken;
+    private String githubUsername;
+    private Boolean githubConnected = false;
+
     public User(String email, String password, String firstName, String lastName) {
         this.email = email;
         this.password = password;
