@@ -59,7 +59,7 @@ public class GitHubController {
         return ResponseEntity.ok(Map.of("connected", user.getGithubConnected(), "username", user.getGithubUsername()));
     }
 
-    @DeleteMapping("/disconect")
+    @DeleteMapping("/disconnect")
     public ResponseEntity<?> disconect(@AuthenticationPrincipal User user) {
         user.setGithubConnected(false);
         user.setGithubUsername(null);
