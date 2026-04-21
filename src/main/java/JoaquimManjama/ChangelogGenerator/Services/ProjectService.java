@@ -40,8 +40,8 @@ public class ProjectService {
         return projects;
     }
 
-    public ProjectDTO getProject(String id) {
-        Optional<Project> possibleProject = repository.findById(id);
+    public ProjectDTO getProject(String slug) {
+        Optional<Project> possibleProject = repository.findBySlug(slug);
 
         if (possibleProject.isPresent()) {
             Project project = possibleProject.get();

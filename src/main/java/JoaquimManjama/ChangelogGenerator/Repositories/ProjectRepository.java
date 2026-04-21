@@ -12,5 +12,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     Optional<Project> findById(String id);
 
+    Optional<Project> findBySlug(String slug);
+
     void deleteById(String id);
 }
