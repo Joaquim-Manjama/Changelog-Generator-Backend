@@ -1,7 +1,9 @@
 package JoaquimManjama.ChangelogGenerator.Controlers;
 
+import JoaquimManjama.ChangelogGenerator.DTOs.GitHubRepository;
 import JoaquimManjama.ChangelogGenerator.Models.User;
 import JoaquimManjama.ChangelogGenerator.Repositories.UserRepository;
+import JoaquimManjama.ChangelogGenerator.Services.GitHubApiService;
 import JoaquimManjama.ChangelogGenerator.Services.GitHubService;
 import JoaquimManjama.ChangelogGenerator.Services.UserService;
 import org.springframework.http.HttpStatus;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -16,11 +19,13 @@ import java.util.Map;
 public class GitHubController {
 
     private final GitHubService service;
+    private final GitHubApiService apiService;
     private final UserService userService;
     private final UserRepository userRepository;
 
-    public GitHubController(GitHubService service, UserService userService,  UserRepository userRepository) {
+    public GitHubController(GitHubService service, GitHubApiService apiService, UserService userService,  UserRepository userRepository) {
         this.service = service;
+        this.apiService = apiService;
         this.userService = userService;
         this.userRepository = userRepository;
     }
@@ -68,5 +73,13 @@ public class GitHubController {
         userRepository.save(user);
 
         return  ResponseEntity.ok(Map.of("message", "Disconnected"));
+    }
+
+    @GetMapping("/get/repos")
+    public ResponseEntity<?> getRepos(@AuthenticationPrincipal User user) {
+        String accessToken = user.getGithubAccessToken();
+        List<GitHubRepository> response = apiService.getGitHubRepositories(accessToken);
+
+        return ResponseEntity.ok(response);
     }
 }

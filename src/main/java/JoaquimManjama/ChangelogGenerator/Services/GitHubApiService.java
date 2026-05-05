@@ -6,6 +6,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -13,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class GitHubApiService {
 
     private RestTemplate restTemplate;
@@ -50,12 +52,12 @@ public class GitHubApiService {
         return null;
     }
 
-    public void getGitHubRepositories(String accessToken) {
+    public List<GitHubRepository> getGitHubRepositories(String accessToken) {
         List<GitHubRepository> repositories = new ArrayList<>();
         String url = "https://api.github.com/user/repos?sort=updated&per_page=100";
 
         ResponseEntity<List<GitHubRepository>> response = makeGitHubRequest(url, accessToken,  new ParameterizedTypeReference<List<GitHubRepository>>() {});
 
-        System.out.println(response.getBody());
+        return response.getBody();
     }
 }
