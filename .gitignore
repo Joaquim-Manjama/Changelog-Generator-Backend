@@ -36,3 +36,5 @@ build/
 files/
 .properties
 .yml
+
+Main.java

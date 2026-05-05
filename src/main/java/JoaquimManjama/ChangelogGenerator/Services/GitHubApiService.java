@@ -1,5 +1,6 @@
 package JoaquimManjama.ChangelogGenerator.Services;
 
+import JoaquimManjama.ChangelogGenerator.DTOs.GitHubCommit;
 import JoaquimManjama.ChangelogGenerator.DTOs.GitHubRepository;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,10 +55,16 @@ public class GitHubApiService {
     }
 
     public List<GitHubRepository> getGitHubRepositories(String accessToken) {
-        List<GitHubRepository> repositories = new ArrayList<>();
-        String url = "https://api.github.com/user/repos?sort=updated&per_page=100";
 
+        String url = "https://api.github.com/user/repos?sort=updated&per_page=100";
         ResponseEntity<List<GitHubRepository>> response = makeGitHubRequest(url, accessToken,  new ParameterizedTypeReference<List<GitHubRepository>>() {});
+
+        return response.getBody();
+    }
+
+    public List<GitHubCommit> getCommits(String accessToken, String owner, String repo) { //, String branch, LocalDateTime since, LocalDateTime until) {
+        String url = "https://api.github.com/repos/" + owner + "/" + repo + "/commits";
+        ResponseEntity<List<GitHubCommit>> response = makeGitHubRequest(url, accessToken,  new ParameterizedTypeReference<List<GitHubCommit>>() {});
 
         return response.getBody();
     }
