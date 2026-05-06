@@ -1,5 +1,6 @@
 package JoaquimManjama.ChangelogGenerator.Controlers;
 
+import JoaquimManjama.ChangelogGenerator.DTOs.GitHubCommitDTO;
 import JoaquimManjama.ChangelogGenerator.DTOs.GitHubRepository;
 import JoaquimManjama.ChangelogGenerator.Models.User;
 import JoaquimManjama.ChangelogGenerator.Repositories.UserRepository;
@@ -80,6 +81,14 @@ public class GitHubController {
         String accessToken = user.getGithubAccessToken();
         List<GitHubRepository> response = apiService.getGitHubRepositories(accessToken);
 
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/get/commits")
+    public ResponseEntity<?> getCommits(@AuthenticationPrincipal User user, @RequestParam String repo) {
+        String accessToken = user.getGithubAccessToken();
+        String owner = user.getGithubUsername();
+        List<GitHubCommitDTO> response = apiService.getCommits(accessToken, owner, repo);
         return ResponseEntity.ok(response);
     }
 }

@@ -1,6 +1,6 @@
 package JoaquimManjama.ChangelogGenerator.Services;
 
-import JoaquimManjama.ChangelogGenerator.DTOs.GitHubCommit;
+import JoaquimManjama.ChangelogGenerator.DTOs.GitHubCommitDTO;
 import JoaquimManjama.ChangelogGenerator.DTOs.GitHubRepository;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -13,7 +13,6 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -55,17 +54,25 @@ public class GitHubApiService {
     }
 
     public List<GitHubRepository> getGitHubRepositories(String accessToken) {
-
         String url = "https://api.github.com/user/repos?sort=updated&per_page=100";
-        ResponseEntity<List<GitHubRepository>> response = makeGitHubRequest(url, accessToken,  new ParameterizedTypeReference<List<GitHubRepository>>() {});
-
+        ResponseEntity<List<GitHubRepository>> response = makeGitHubRequest(url, accessToken, new ParameterizedTypeReference<>() {
+        });
         return response.getBody();
     }
 
-    public List<GitHubCommit> getCommits(String accessToken, String owner, String repo) { //, String branch, LocalDateTime since, LocalDateTime until) {
-        String url = "https://api.github.com/repos/" + owner + "/" + repo + "/commits";
-        ResponseEntity<List<GitHubCommit>> response = makeGitHubRequest(url, accessToken,  new ParameterizedTypeReference<List<GitHubCommit>>() {});
+    public List<GitHubCommitDTO> getCommits(String accessToken, String owner, String repo) { //, String branch, LocalDateTime since, LocalDateTime until) {
+        String url = "https://api.github.com/repos/" + owner + "/" + repo + "/commits";//?since=" + since.toString() + "&until=" + until.toString()q;
+        ResponseEntity<List<GitHubCommitDTO>> response = makeGitHubRequest(url, accessToken, new ParameterizedTypeReference<>() {
+        });
 
-        return response.getBody();
+        if (response == null) return null;
+
+        List<GitHubCommitDTO> commits = response.getBody().stream().filter(commit -> !isMergeCommit(commit.commit().message())).toList();
+        return commits;
+    }
+
+    private boolean isMergeCommit(String message) {
+        if (message == null) return false;
+        return message.startsWith("Merge pull request") || message.startsWith("Merge branch");
     }
 }
