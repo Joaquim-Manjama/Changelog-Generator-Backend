@@ -1,6 +1,7 @@
 package JoaquimManjama.ChangelogGenerator.Services;
 
 import JoaquimManjama.ChangelogGenerator.DTOs.GitHubCommitDTO;
+import JoaquimManjama.ChangelogGenerator.DTOs.GitHubPullRequestDTO;
 import JoaquimManjama.ChangelogGenerator.DTOs.GitHubRepository;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -69,6 +70,17 @@ public class GitHubApiService {
 
         List<GitHubCommitDTO> commits = response.getBody().stream().filter(commit -> !isMergeCommit(commit.commit().message())).toList();
         return commits;
+    }
+
+    public List<GitHubPullRequestDTO> getMergedPullRequests(String accessToken, String owner, String repo) {//. LocalDateTime since) {
+
+        String url = "https://api.github.com/repos/" + owner + "/" + repo + "/pulls?state=closed";//?since=" + since.toString();
+
+        ResponseEntity<List<GitHubPullRequestDTO>> response = makeGitHubRequest(url, accessToken, new ParameterizedTypeReference<>() {});
+
+        if (response == null) return null;
+
+        return response.getBody();
     }
 
     private boolean isMergeCommit(String message) {
