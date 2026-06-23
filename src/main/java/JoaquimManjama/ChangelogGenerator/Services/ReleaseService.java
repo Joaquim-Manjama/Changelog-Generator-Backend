@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +44,7 @@ public class ReleaseService {
     }
 
     private ReleaseDTO convertToDTO(Release release) {
-        return new ReleaseDTO(release.getId(), release.getVersion(), release.getDescription(), release.getCreatedAt(), release.getStatus().toString());
+        return new ReleaseDTO(release.getId(), release.getVersion(), release.getDescription(), release.getCreatedAt(), release.getStatus().toString(), release.getReleaseDate());
     }
 
     public List<ReleaseDTO> getReleases(String projectId) {
@@ -96,6 +97,7 @@ public class ReleaseService {
             System.out.println("Figuring out what status it will become next!");
             if ("DRAFT".equals(release.getStatus().toString())) {
               release.setStatus(ReleaseStatus.PUBLISHED);
+              release.setReleaseDate(LocalDateTime.now());
               System.out.println("Changed release " + release.getVersion() +" status from DRAFT to PUBLISHED!");
             } else {
                 release.setStatus(ReleaseStatus.DRAFT);

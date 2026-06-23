@@ -32,9 +32,9 @@ public class ProjectControler {
     }
 
     // Get a single project
-    @GetMapping("/get/{slug}")
-    public ResponseEntity<?> getProject(@PathVariable String slug) {
-        ProjectDTO project = service.getProject(slug);
+    @GetMapping("/get/{id}")
+    public ResponseEntity<?> getProject(@PathVariable String id) {
+        ProjectDTO project = service.getProject(id);
         return ResponseEntity.ok(project);
     }
 

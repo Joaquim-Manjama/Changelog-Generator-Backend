@@ -32,7 +32,7 @@ public class Release {
     private String version;
 
     @Column(nullable = false)
-    private LocalDate releaseDate;
+    private LocalDateTime releaseDate;
 
     @Column(length = 2000)
     private String description;
@@ -46,7 +46,7 @@ public class Release {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        releaseDate = LocalDate.now();
+        releaseDate = LocalDateTime.now();
     }
 
     @OneToMany(mappedBy = "release", cascade = CascadeType.ALL, orphanRemoval = true)
