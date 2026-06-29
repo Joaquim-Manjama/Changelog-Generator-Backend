@@ -12,12 +12,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class GitHubApiService {
@@ -64,8 +61,8 @@ public class GitHubApiService {
         return response.getBody();
     }
 
-    public List<GitHubCommitDTO> getCommits(String accessToken, String owner, String repo) { //, String branch, LocalDateTime since, LocalDateTime until) {
-        String url = "https://api.github.com/repos/" + owner + "/" + repo + "/commits";//?since=" + since.toString() + "&until=" + until.toString()q;
+    public List<GitHubCommitDTO> getCommits(String accessToken, String owner, String repo, String since, String until) {
+        String url = "https://api.github.com/repos/" + owner + "/" + repo + "/commits";//?since=" + since + "&until=" + until;
         ResponseEntity<List<GitHubCommitDTO>> response = makeGitHubRequest(url, accessToken, new ParameterizedTypeReference<>() {
         });
 
@@ -75,9 +72,9 @@ public class GitHubApiService {
         return commits;
     }
 
-    public List<GitHubPullRequestDTO> getMergedPullRequests(String accessToken, String owner, String repo) {//. LocalDateTime since) {
+    public List<GitHubPullRequestDTO> getMergedPullRequests(String accessToken, String owner, String repo, String since, String until) {
 
-        String url = "https://api.github.com/repos/" + owner + "/" + repo + "/pulls?state=closed";//?since=" + since.toString();
+        String url = "https://api.github.com/repos/" + owner + "/" + repo + "/pulls?state=closed";//?since=" + since + "&until=" + until;
 
         ResponseEntity<List<GitHubPullRequestDTO>> response = makeGitHubRequest(url, accessToken, new ParameterizedTypeReference<>() {});
 
@@ -86,12 +83,12 @@ public class GitHubApiService {
         return response.getBody();
     }
 
-    public List<GitHubChangeDTO> getRecentChanges(String accessToken, String owner, String repo) { //, String branch, LocalDateTime since) {
+    public List<GitHubChangeDTO> getRecentChanges(String accessToken, String owner, String repo, String since, String until) {
 
         List<GitHubChangeDTO> changes = new ArrayList<>();
 
-        List<GitHubCommitDTO> commits = getCommits(accessToken, owner, repo);
-        List<GitHubPullRequestDTO> pulls = getMergedPullRequests(accessToken, owner, repo);
+        List<GitHubCommitDTO> commits = getCommits(accessToken, owner, repo, since, until);
+        List<GitHubPullRequestDTO> pulls = getMergedPullRequests(accessToken, owner, repo, since, until);
 
         changes.addAll(commits.stream().map(this::convertCommitToChangeDTO).toList());
         changes.addAll(pulls.stream().map(this::convertPullRequestToChangeDTO).toList());

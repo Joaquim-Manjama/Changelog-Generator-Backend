@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -87,26 +88,26 @@ public class GitHubController {
     }
 
     @GetMapping("/get/commits")
-    public ResponseEntity<?> getCommits(@AuthenticationPrincipal User user, @RequestParam String repo) {
+    public ResponseEntity<?> getCommits(@AuthenticationPrincipal User user, @RequestParam String repo, @RequestParam String since, @RequestParam String until) {
         String accessToken = user.getGithubAccessToken();
         String owner = user.getGithubUsername();
-        List<GitHubCommitDTO> response = apiService.getCommits(accessToken, owner, repo);
+        List<GitHubCommitDTO> response = apiService.getCommits(accessToken, owner, repo, since, until);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/get/pulls")
-    public ResponseEntity<?> getPulls(@AuthenticationPrincipal User user, @RequestParam String repo) {
+    public ResponseEntity<?> getPulls(@AuthenticationPrincipal User user, @RequestParam String repo, @RequestParam String since, @RequestParam String until) {
         String accessToken = user.getGithubAccessToken();
         String owner = user.getGithubUsername();
-        List<GitHubPullRequestDTO> response = apiService.getMergedPullRequests(accessToken, owner, repo);
+        List<GitHubPullRequestDTO> response = apiService.getMergedPullRequests(accessToken, owner, repo, since, until);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/get/changes")
-    public ResponseEntity<?> getChanges(@AuthenticationPrincipal User user, @RequestParam String repo) {
+    public ResponseEntity<?> getChanges(@AuthenticationPrincipal User user, @RequestParam String repo,@RequestParam String since, @RequestParam String until) {
         String accessToken = user.getGithubAccessToken();
         String owner = user.getGithubUsername();
-        List<GitHubChangeDTO> response = apiService.getRecentChanges(accessToken, owner, repo);
+        List<GitHubChangeDTO> response = apiService.getRecentChanges(accessToken, owner, repo, since, until);
         return ResponseEntity.ok(response);
     }
 }
