@@ -62,7 +62,8 @@ public class GitHubApiService {
     }
 
     public List<GitHubCommitDTO> getCommits(String accessToken, String owner, String repo, String since, String until) {
-        String url = "https://api.github.com/repos/" + owner + "/" + repo + "/commits";//?since=" + since + "&until=" + until;
+        String url = "https://api.github.com/repos/" + owner + "/" + repo + "/commits?since=" + since + "&until=" + until;
+
         ResponseEntity<List<GitHubCommitDTO>> response = makeGitHubRequest(url, accessToken, new ParameterizedTypeReference<>() {
         });
 
@@ -74,7 +75,7 @@ public class GitHubApiService {
 
     public List<GitHubPullRequestDTO> getMergedPullRequests(String accessToken, String owner, String repo, String since, String until) {
 
-        String url = "https://api.github.com/repos/" + owner + "/" + repo + "/pulls?state=closed";//?since=" + since + "&until=" + until;
+        String url = "https://api.github.com/repos/" + owner + "/" + repo + "/pulls?state=closed?since=" + since + "&until=" + until;
 
         ResponseEntity<List<GitHubPullRequestDTO>> response = makeGitHubRequest(url, accessToken, new ParameterizedTypeReference<>() {});
 
