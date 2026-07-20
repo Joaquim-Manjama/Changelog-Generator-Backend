@@ -2,6 +2,7 @@ package JoaquimManjama.ChangelogGenerator.Services;
 
 import JoaquimManjama.ChangelogGenerator.DTOs.ChangelogEntryDTO;
 import JoaquimManjama.ChangelogGenerator.DTOs.ChangelogEntryRequestDTO;
+import JoaquimManjama.ChangelogGenerator.DTOs.GitHubChangeDTO;
 import JoaquimManjama.ChangelogGenerator.Enums.EntryCategory;
 import JoaquimManjama.ChangelogGenerator.Models.ChangelogEntry;
 import JoaquimManjama.ChangelogGenerator.Models.Release;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.swing.text.html.Option;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -86,8 +89,28 @@ public class ChangelogEntryService {
         return null;
     }
 
-    public ChangelogEntryDTO convertToDTO(ChangelogEntry changelogEntry) {
+    public List<ChangelogEntryDTO> importEntries(List<GitHubChangeDTO> changes, String releaseId) {
+
+        List<ChangelogEntryDTO> importedEntries = new ArrayList<>();
+        Optional<Release> possibleRelease = releaseRepository.findById(releaseId);
+
+        if (possibleRelease.isPresent()) {
+            Release release = possibleRelease.get();
+            List<ChangelogEntryRequestDTO> entries = new ArrayList<>();
+
+            for (ChangelogEntryRequestDTO newChangelogEntry : entries) {
+                importedEntries.add(addEntry(newChangelogEntry, releaseId));
+            }
+        }
+        return importedEntries;
+    }
+
+    private ChangelogEntryDTO convertToDTO(ChangelogEntry changelogEntry) {
         return new ChangelogEntryDTO(changelogEntry.getId(),  changelogEntry.getDescription(), changelogEntry.getDisplayOrder(), changelogEntry.getCategory().toString());
+    }
+
+    private ChangelogEntryRequestDTO convertChangeToEntry (GitHubChangeDTO change) {
+
     }
 
 

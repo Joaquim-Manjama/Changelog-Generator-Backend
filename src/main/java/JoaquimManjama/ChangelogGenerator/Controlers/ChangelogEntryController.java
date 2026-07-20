@@ -2,6 +2,7 @@ package JoaquimManjama.ChangelogGenerator.Controlers;
 
 import JoaquimManjama.ChangelogGenerator.DTOs.ChangelogEntryDTO;
 import JoaquimManjama.ChangelogGenerator.DTOs.ChangelogEntryRequestDTO;
+import JoaquimManjama.ChangelogGenerator.DTOs.GitHubChangeDTO;
 import JoaquimManjama.ChangelogGenerator.Services.ChangelogEntryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,12 @@ public class ChangelogEntryController {
     public ResponseEntity<?> getEntries(@PathVariable String releaseId) {
         List<ChangelogEntryDTO> entries = service.getEntries(releaseId);
         return ResponseEntity.ok().body(entries);
+    }
+
+    @PostMapping("releases/{releaseId}/entries/import")
+    public ResponseEntity<?>importEntries(@RequestBody List<GitHubChangeDTO> changes, @PathVariable String releaseId) {
+        List<ChangelogEntryDTO> changelogEntries = service.importEntries(entries, releaseId);
+        return ResponseEntity.ok().body(changelogEntries);
     }
 
     @PostMapping("releases/{releaseId}/entries/new")
