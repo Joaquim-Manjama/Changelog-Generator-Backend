@@ -136,8 +136,8 @@ public class ChangelogEntryService {
             }
         }
 
-        String title = change.title().toLowerCase();
-        String description = change.description().toLowerCase();
+        String title = change.title() == null ? "" : change.title().toLowerCase();
+        String description = change.description() == null ? "" :change.description().toLowerCase();
         if (description.contains("feat") || title.contains("feat")) return "NEW_FEATURE";
         if (description.contains("fix") || title.contains("fix")) return "BUG_FIX";
 
@@ -145,11 +145,11 @@ public class ChangelogEntryService {
     }
 
     private String cleanMessage(String title, String description) {
-        return title.isEmpty() ? clean(description): clean(title);
+        return title.isEmpty() ? clean(description.toLowerCase()): clean(title.toLowerCase());
     }
 
     private String clean(String message) {
-        return message.replaceAll("^(feat|fix|perf|docs|style|refactor|chore):\\s*", "");
+        return message.replaceAll("^(feat|feature|fix|fixed|perf|docs|style|refactor|chore|change|changed|implement|implemented|add):\\s*", "");
     }
 
 
