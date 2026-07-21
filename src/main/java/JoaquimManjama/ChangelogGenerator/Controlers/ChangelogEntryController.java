@@ -25,7 +25,7 @@ public class ChangelogEntryController {
 
     @PostMapping("releases/{releaseId}/entries/import")
     public ResponseEntity<?>importEntries(@RequestBody List<GitHubChangeDTO> changes, @PathVariable String releaseId) {
-        List<ChangelogEntryDTO> changelogEntries = service.importEntries(entries, releaseId);
+        List<ChangelogEntryDTO> changelogEntries = service.importEntries(changes, releaseId);
         return ResponseEntity.ok().body(changelogEntries);
     }
 

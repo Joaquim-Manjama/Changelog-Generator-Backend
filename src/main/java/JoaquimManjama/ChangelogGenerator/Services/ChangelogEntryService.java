@@ -98,9 +98,19 @@ public class ChangelogEntryService {
             Release release = possibleRelease.get();
             List<ChangelogEntryRequestDTO> entries = new ArrayList<>();
 
-            for (ChangelogEntryRequestDTO newChangelogEntry : entries) {
-                importedEntries.add(addEntry(newChangelogEntry, releaseId));
+            for  (GitHubChangeDTO change : changes) {
+
+                ChangelogEntryRequestDTO entry = convertChangeToEntry(change);
+                ChangelogEntry newChangelogEntry = new ChangelogEntry();
+                newChangelogEntry.setRelease(release);
+                newChangelogEntry.setDescription(entry.description());
+                newChangelogEntry.setDisplayOrder(entry.displayOrder());
+                newChangelogEntry.setCategory(EntryCategory.fromString(entry.category()));
+                repository.save(newChangelogEntry);
+
+                importedEntries.add(convertToDTO(newChangelogEntry));
             }
+
         }
         return importedEntries;
     }
@@ -109,8 +119,37 @@ public class ChangelogEntryService {
         return new ChangelogEntryDTO(changelogEntry.getId(),  changelogEntry.getDescription(), changelogEntry.getDisplayOrder(), changelogEntry.getCategory().toString());
     }
 
-    private ChangelogEntryRequestDTO convertChangeToEntry (GitHubChangeDTO change) {
+    private ChangelogEntryRequestDTO convertChangeToEntry(GitHubChangeDTO change) {
 
+        String category = determineCategory(change);
+        ChangelogEntryRequestDTO entry = new ChangelogEntryRequestDTO(category, cleanMessage(change.title(), change.description()), 1000);
+        return entry;
+    }
+
+    private String determineCategory(GitHubChangeDTO change) {
+
+        if (change.labels() != null && !change.labels().isEmpty()) {
+            for (String label : change.labels()) {
+                if (label.toLowerCase().contains("feat")) return "NEW_FEATURE";
+                if (label.toLowerCase().contains("fix")) return "BUG_FIX";
+
+            }
+        }
+
+        String title = change.title().toLowerCase();
+        String description = change.description().toLowerCase();
+        if (description.contains("feat") || title.contains("feat")) return "NEW_FEATURE";
+        if (description.contains("fix") || title.contains("fix")) return "BUG_FIX";
+
+        return "IMPROVEMENT";
+    }
+
+    private String cleanMessage(String title, String description) {
+        return title.isEmpty() ? clean(description): clean(title);
+    }
+
+    private String clean(String message) {
+        return message.replaceAll("^(feat|fix|perf|docs|style|refactor|chore):\\s*", "");
     }
 
 
