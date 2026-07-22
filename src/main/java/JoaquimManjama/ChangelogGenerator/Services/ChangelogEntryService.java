@@ -149,7 +149,7 @@ public class ChangelogEntryService {
     }
 
     private String clean(String message) {
-        return message.replaceAll("^(feat|feature|fix|fixed|perf|docs|style|refactor|chore|change|changed|implement|implemented|add):\\s*", "");
+        return message.replaceAll("^(feature|feat|fixed|fix|perf|docs|style|refactor|chore|changed|change|implemented|implement|added|add|created|create|worked|work|improved|improve):?/?\\s*", "");
     }
 
 
