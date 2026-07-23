@@ -11,9 +11,7 @@ import JoaquimManjama.ChangelogGenerator.Repositories.ReleaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -33,6 +31,7 @@ public class ChangelogEntryService {
 
         if (possibleRelease.isPresent()) {
             Release release = possibleRelease.get();
+            increaseEntryNumber(release, changelogEntryRequestDTO.category());
 
             ChangelogEntry newChangelogEntry = new ChangelogEntry();
             newChangelogEntry.setRelease(release);
@@ -82,6 +81,8 @@ public class ChangelogEntryService {
 
         if (possibleEntry.isPresent()) {
             ChangelogEntry changelogEntry = possibleEntry.get();
+            Release release = changelogEntry.getRelease();
+            decreaseEntryNumber(release, changelogEntry.getCategory());
             repository.delete(changelogEntry);
             return convertToDTO(changelogEntry);
         }
@@ -101,14 +102,10 @@ public class ChangelogEntryService {
             for  (GitHubChangeDTO change : changes) {
 
                 ChangelogEntryRequestDTO entry = convertChangeToEntry(change);
-                ChangelogEntry newChangelogEntry = new ChangelogEntry();
-                newChangelogEntry.setRelease(release);
-                newChangelogEntry.setDescription(entry.description());
-                newChangelogEntry.setDisplayOrder(entry.displayOrder());
-                newChangelogEntry.setCategory(EntryCategory.fromString(entry.category()));
-                repository.save(newChangelogEntry);
-
-                importedEntries.add(convertToDTO(newChangelogEntry));
+                ;
+                increaseEntryNumber(release, entry.category());
+                ChangelogEntryDTO newChangelogEntry = addEntry(entry, releaseId);
+                importedEntries.add(newChangelogEntry);
             }
 
         }
@@ -150,6 +147,41 @@ public class ChangelogEntryService {
 
     private String clean(String message) {
         return message.replaceAll("^(feature|feat|fixed|fix|perf|docs|style|refactor|chore|changed|change|implemented|implement|added|add|created|create|worked|work|improved|improve):?/?\\s*", "");
+    }
+
+    private void increaseEntryNumber(Release release, String category) {
+        switch (category) {
+            case "NEW_FEATURE":
+                release.addNumberOfFeatures();
+                System.out.println(release.getNumberOfFeatures());
+                break;
+            case "BUG_FIX":
+                release.addNumberOfFixes();
+                break;
+            case "IMPROVEMENT":
+                release.addNumberOfImprovements();
+                break;
+            default:
+                break;
+        }
+        releaseRepository.save(release);
+    }
+
+    private void decreaseEntryNumber(Release release, EntryCategory category) {
+        switch (category) {
+            case EntryCategory.NEW_FEATURE:
+                release.subtractNumberOfFeatures();
+                break;
+            case EntryCategory.BUG_FIX:
+                release.subtractNumberOfFixes();
+                break;
+            case EntryCategory.IMPROVEMENT:
+                release.subtractNumberOfImprovements();
+                break;
+            default:
+                break;
+        }
+        releaseRepository.save(release);
     }
 
 

@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +41,19 @@ public class Release {
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    private Integer numberOfFeatures = 0;
+    private Integer numberOfFixes = 0;
+    private Integer numberOfImprovements = 0;
+
+    public void addNumberOfFeatures() {this.numberOfFeatures++;}
+    public void subtractNumberOfFeatures() {if (this.numberOfFeatures > 0) this.numberOfFeatures--;}
+
+    public void addNumberOfFixes() {this.numberOfFixes++;}
+    public void subtractNumberOfFixes() {if (this.numberOfFixes > 0) this.numberOfFixes--;}
+
+    public void addNumberOfImprovements() {this.numberOfImprovements++;}
+    public void subtractNumberOfImprovements() {if (this.numberOfImprovements > 0) this.numberOfImprovements--;}
 
     @PrePersist
     protected void onCreate() {

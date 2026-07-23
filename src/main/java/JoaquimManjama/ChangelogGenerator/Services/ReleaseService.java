@@ -44,7 +44,7 @@ public class ReleaseService {
     }
 
     private ReleaseDTO convertToDTO(Release release) {
-        return new ReleaseDTO(release.getId(), release.getVersion(), release.getDescription(), release.getCreatedAt(), release.getStatus().toString(), release.getReleaseDate());
+        return new ReleaseDTO(release.getId(), release.getVersion(), release.getDescription(), release.getCreatedAt(), release.getStatus().toString(), release.getReleaseDate(), release.getNumberOfFeatures(), release.getNumberOfFixes(), release.getNumberOfImprovements());
     }
 
     public List<ReleaseDTO> getReleases(String projectId) {
