@@ -31,18 +31,10 @@ public class ChangelogEntryService {
 
         if (possibleRelease.isPresent()) {
             Release release = possibleRelease.get();
-            increaseEntryNumber(release, changelogEntryRequestDTO.category());
-
-            ChangelogEntry newChangelogEntry = new ChangelogEntry();
-            newChangelogEntry.setRelease(release);
-            newChangelogEntry.setDescription(changelogEntryRequestDTO.description());
-            newChangelogEntry.setDisplayOrder(changelogEntryRequestDTO.displayOrder());
-            newChangelogEntry.setCategory(EntryCategory.fromString(changelogEntryRequestDTO.category()));
-            repository.save(newChangelogEntry);
-
-            return convertToDTO(newChangelogEntry);
+            ChangelogEntryDTO entry = add(release, changelogEntryRequestDTO);
+            countEntries(release);
+            return entry;
         }
-
         return null;
     }
 
@@ -52,10 +44,8 @@ public class ChangelogEntryService {
         if (possibleRelease.isPresent()) {
             Release release = possibleRelease.get();
             List<ChangelogEntry> changelogEntries = release.getChangelogEntries();
-
             return changelogEntries.stream().sorted(Comparator.comparing(ChangelogEntry::getDisplayOrder)).map(this::convertToDTO).toList();
         }
-
         return null;
     }
 
@@ -67,11 +57,11 @@ public class ChangelogEntryService {
             changelogEntry.setCategory(EntryCategory.fromString(changelogEntryRequestDTO.category()));
             changelogEntry.setDescription(changelogEntryRequestDTO.description());
             changelogEntry.setDisplayOrder(changelogEntryRequestDTO.displayOrder());
-
             repository.save(changelogEntry);
+            Release release = changelogEntry.getRelease();
+            countEntries(release);
             return convertToDTO(changelogEntry);
         }
-
         return null;
     }
 
@@ -82,16 +72,14 @@ public class ChangelogEntryService {
         if (possibleEntry.isPresent()) {
             ChangelogEntry changelogEntry = possibleEntry.get();
             Release release = changelogEntry.getRelease();
-            decreaseEntryNumber(release, changelogEntry.getCategory());
             repository.delete(changelogEntry);
+            countEntries(release);
             return convertToDTO(changelogEntry);
         }
-
         return null;
     }
 
     public List<ChangelogEntryDTO> importEntries(List<GitHubChangeDTO> changes, String releaseId) {
-
         List<ChangelogEntryDTO> importedEntries = new ArrayList<>();
         Optional<Release> possibleRelease = releaseRepository.findById(releaseId);
 
@@ -100,14 +88,10 @@ public class ChangelogEntryService {
             List<ChangelogEntryRequestDTO> entries = new ArrayList<>();
 
             for  (GitHubChangeDTO change : changes) {
-
                 ChangelogEntryRequestDTO entry = convertChangeToEntry(change);
-                ;
-                increaseEntryNumber(release, entry.category());
-                ChangelogEntryDTO newChangelogEntry = addEntry(entry, releaseId);
-                importedEntries.add(newChangelogEntry);
+                importedEntries.add(add(release, entry));
             }
-
+            countEntries(release);
         }
         return importedEntries;
     }
@@ -117,19 +101,16 @@ public class ChangelogEntryService {
     }
 
     private ChangelogEntryRequestDTO convertChangeToEntry(GitHubChangeDTO change) {
-
         String category = determineCategory(change);
         ChangelogEntryRequestDTO entry = new ChangelogEntryRequestDTO(category, cleanMessage(change.title(), change.description()), 1000);
         return entry;
     }
 
     private String determineCategory(GitHubChangeDTO change) {
-
         if (change.labels() != null && !change.labels().isEmpty()) {
             for (String label : change.labels()) {
                 if (label.toLowerCase().contains("feat")) return "NEW_FEATURE";
                 if (label.toLowerCase().contains("fix")) return "BUG_FIX";
-
             }
         }
 
@@ -149,40 +130,30 @@ public class ChangelogEntryService {
         return message.replaceAll("^(feature|feat|fixed|fix|perf|docs|style|refactor|chore|changed|change|implemented|implement|added|add|created|create|worked|work|improved|improve):?/?\\s*", "");
     }
 
-    private void increaseEntryNumber(Release release, String category) {
-        switch (category) {
-            case "NEW_FEATURE":
-                release.addNumberOfFeatures();
-                System.out.println(release.getNumberOfFeatures());
-                break;
-            case "BUG_FIX":
-                release.addNumberOfFixes();
-                break;
-            case "IMPROVEMENT":
-                release.addNumberOfImprovements();
-                break;
-            default:
-                break;
+    private void countEntries(Release release) {
+        int[] counts = {0, 0, 0};
+
+        for (ChangelogEntry entry: release.getChangelogEntries()) {
+            switch (entry.getCategory()) {
+                case NEW_FEATURE ->  counts[0]++;
+                case BUG_FIX -> counts[1]++;
+                case IMPROVEMENT -> counts[2]++;
+            }
         }
+
+        release.setNumberOfFeatures(counts[0]);
+        release.setNumberOfFixes(counts[1]);
+        release.setNumberOfImprovements(counts[2]);
         releaseRepository.save(release);
     }
 
-    private void decreaseEntryNumber(Release release, EntryCategory category) {
-        switch (category) {
-            case EntryCategory.NEW_FEATURE:
-                release.subtractNumberOfFeatures();
-                break;
-            case EntryCategory.BUG_FIX:
-                release.subtractNumberOfFixes();
-                break;
-            case EntryCategory.IMPROVEMENT:
-                release.subtractNumberOfImprovements();
-                break;
-            default:
-                break;
-        }
-        releaseRepository.save(release);
+    private ChangelogEntryDTO add(Release release, ChangelogEntryRequestDTO changelogEntryRequestDTO) {
+        ChangelogEntry newChangelogEntry = new ChangelogEntry();
+        newChangelogEntry.setRelease(release);
+        newChangelogEntry.setDescription(changelogEntryRequestDTO.description());
+        newChangelogEntry.setDisplayOrder(changelogEntryRequestDTO.displayOrder());
+        newChangelogEntry.setCategory(EntryCategory.fromString(changelogEntryRequestDTO.category()));
+        repository.save(newChangelogEntry);
+        return convertToDTO(newChangelogEntry);
     }
-
-
 }

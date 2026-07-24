@@ -46,15 +46,6 @@ public class Release {
     private Integer numberOfFixes = 0;
     private Integer numberOfImprovements = 0;
 
-    public void addNumberOfFeatures() {this.numberOfFeatures++;}
-    public void subtractNumberOfFeatures() {if (this.numberOfFeatures > 0) this.numberOfFeatures--;}
-
-    public void addNumberOfFixes() {this.numberOfFixes++;}
-    public void subtractNumberOfFixes() {if (this.numberOfFixes > 0) this.numberOfFixes--;}
-
-    public void addNumberOfImprovements() {this.numberOfImprovements++;}
-    public void subtractNumberOfImprovements() {if (this.numberOfImprovements > 0) this.numberOfImprovements--;}
-
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
