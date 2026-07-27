@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface ChangelogEntryRepository extends JpaRepository<ChangelogEntry, Long> {
+public interface ChangelogEntryRepository extends JpaRepository<ChangelogEntry, String> {
     Optional<ChangelogEntry> findById(String id);
 }

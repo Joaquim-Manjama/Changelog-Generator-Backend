@@ -72,6 +72,7 @@ public class ChangelogEntryService {
         if (possibleEntry.isPresent()) {
             ChangelogEntry changelogEntry = possibleEntry.get();
             Release release = changelogEntry.getRelease();
+            release.getChangelogEntries().remove(changelogEntry);
             repository.delete(changelogEntry);
             countEntries(release);
             return convertToDTO(changelogEntry);

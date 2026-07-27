@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface ReleaseRepository extends JpaRepository<Release, Long>{
+public interface ReleaseRepository extends JpaRepository<Release, String>{
     Optional<Release> findById(String id);
 }
