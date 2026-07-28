@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("projects")
-public class ChangelogEntryController {
+public class ChangelogEntryControler {
 
     @Autowired
     ChangelogEntryService service;

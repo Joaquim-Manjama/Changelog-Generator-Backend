@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("projects")
-public class ReleaseController {
+public class ReleaseControler {
 
     @Autowired
     private ReleaseService service;

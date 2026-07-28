@@ -51,6 +51,18 @@ public class ProjectService {
         return null;
     }
 
+    public ProjectDTO getProjectBySlug(String slug) {
+
+        Optional<Project> possibleProject = repository.findBySlug(slug);
+
+        if (possibleProject.isPresent()) {
+            Project project = possibleProject.get();
+            return convertToDTO(project);
+        }
+
+        return null;
+    }
+
     public ProjectDTO convertToDTO(Project project) {
         return new ProjectDTO(project.getId(), project.getName(), project.getSlug(), project.getGithubRepo());
     }

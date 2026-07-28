@@ -14,20 +14,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/github")
-public class GitHubController {
+public class GitHubControler {
 
     private final GitHubService service;
     private final GitHubApiService apiService;
     private final UserService userService;
     private final UserRepository userRepository;
 
-    public GitHubController(GitHubService service, GitHubApiService apiService, UserService userService,  UserRepository userRepository) {
+    public GitHubControler(GitHubService service, GitHubApiService apiService, UserService userService, UserRepository userRepository) {
         this.service = service;
         this.apiService = apiService;
         this.userService = userService;
