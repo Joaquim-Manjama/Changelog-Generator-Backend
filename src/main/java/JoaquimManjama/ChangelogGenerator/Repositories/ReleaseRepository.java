@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface ReleaseRepository extends JpaRepository<Release, String>{
     Optional<Release> findById(String id);
+
+    Optional<Release> findByVersionAndProjectSlug(String version, String projectSlug);
 }
