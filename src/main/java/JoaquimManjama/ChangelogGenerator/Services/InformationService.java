@@ -2,6 +2,7 @@ package JoaquimManjama.ChangelogGenerator.Services;
 
 import JoaquimManjama.ChangelogGenerator.DTOs.*;
 import JoaquimManjama.ChangelogGenerator.Enums.ReleaseStatus;
+import JoaquimManjama.ChangelogGenerator.Models.ChangelogEntry;
 import JoaquimManjama.ChangelogGenerator.Models.Project;
 import JoaquimManjama.ChangelogGenerator.Models.Release;
 import JoaquimManjama.ChangelogGenerator.Repositories.ProjectRepository;
@@ -21,6 +22,9 @@ public class InformationService {
 
     @Autowired
     ReleaseRepository releaseRepository;
+
+    @Autowired
+    ChangelogEntryService changelogEntryService;
 
     public ProjectInfoDTO getProjectBySlug(String slug) {
 
@@ -45,7 +49,7 @@ public class InformationService {
         return null;
     }
 
-    public ProjectInfoDTO convertToDTO(Project project) {
+    private ProjectInfoDTO convertToDTO(Project project) {
 
         List<Release> releases = project.getReleases();
         List<ReleaseInfoDTO> publishedReleasesInfo = new ArrayList<>();
@@ -57,12 +61,8 @@ public class InformationService {
         return new ProjectInfoDTO(project.getName(), project.getSlug(), project.getGithubRepo(), publishedReleasesInfo);
     }
 
-    public ReleaseInfoDTO convertToDTO(Release release) {
-        return new ReleaseInfoDTO(release.getVersion(), release.getDescription());
-    }
-
-    public ReleaseDetailDTO convertToDetailDTO(Release release) {
-        return new ReleaseDetailDTO(
+    private ReleaseInfoDTO convertToDTO(Release release) {
+        return new ReleaseInfoDTO(
                 release.getVersion(),
                 release.getDescription(),
                 release.getCreatedAt(),
@@ -74,5 +74,43 @@ public class InformationService {
         );
     }
 
+    private ChangelogEntryInfoDTO convertToDTO(ChangelogEntry changelogEntry) {
+        return new ChangelogEntryInfoDTO(changelogEntry.getDescription(), changelogEntry.getCategory().toString());
+    }
 
+    private ReleaseDetailDTO convertToDetailDTO(Release release) {
+
+        List<ChangelogEntryInfoDTO> changelogEntries = release.getChangelogEntries().stream().map(this::convertToDTO).toList();
+        List<ChangelogEntryInfoDTO> features = new ArrayList<>();
+        List<ChangelogEntryInfoDTO> fixes = new ArrayList<>();
+        List<ChangelogEntryInfoDTO> improvements = new ArrayList<>();
+
+        for (ChangelogEntryInfoDTO changelogEntry : changelogEntries) {
+
+            switch (changelogEntry.category()) {
+
+                case "NEW_FEATURE":
+                    features.add(changelogEntry);
+                    break;
+                case "BUG_FIX":
+                    fixes.add(changelogEntry);
+                    break;
+                case "IMPROVEMENT":
+                    improvements.add(changelogEntry);
+                    break;
+            }
+
+        }
+
+        return new ReleaseDetailDTO(
+                release.getVersion(),
+                release.getDescription(),
+                release.getCreatedAt(),
+                release.getStatus().toString(),
+                release.getReleaseDate(),
+                features,
+                fixes,
+                improvements
+        );
+    }
 }
