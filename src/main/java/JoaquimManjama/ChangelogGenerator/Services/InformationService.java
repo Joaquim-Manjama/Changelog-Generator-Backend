@@ -66,8 +66,6 @@ public class InformationService {
                 release.getVersion(),
                 release.getDescription(),
                 release.getCreatedAt(),
-                release.getStatus().toString(),
-                release.getReleaseDate(),
                 release.getNumberOfFeatures(),
                 release.getNumberOfFixes(),
                 release.getNumberOfImprovements()

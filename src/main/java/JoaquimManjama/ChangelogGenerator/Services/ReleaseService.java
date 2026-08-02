@@ -33,7 +33,7 @@ public class ReleaseService {
 
             Release release = new Release();
             release.setVersion(releaseRequestDTO.version());
-            release.setDescription(releaseRequestDTO.description());
+            release.setDescription(releaseRequestDTO.description().replaceAll("\n", ""));
             release.setProject(project);
 
             repository.save(release);
@@ -64,7 +64,7 @@ public class ReleaseService {
         if (release.isPresent()) {
             Release updatedRelease = release.get();
             updatedRelease.setVersion(releaseRequestDTO.version());
-            updatedRelease.setDescription(releaseRequestDTO.description());
+            updatedRelease.setDescription(releaseRequestDTO.description().replaceAll("\n", ""));
 
             repository.save(updatedRelease);
             return convertToDTO(updatedRelease);
