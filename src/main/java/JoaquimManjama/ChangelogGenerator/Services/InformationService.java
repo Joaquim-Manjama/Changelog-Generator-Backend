@@ -58,7 +58,7 @@ public class InformationService {
             if (release.getStatus().equals(ReleaseStatus.PUBLISHED))
                 publishedReleasesInfo.add(convertToDTO(release));
         }
-        return new ProjectInfoDTO(project.getName(), project.getSlug(), project.getGithubRepo(), publishedReleasesInfo);
+        return new ProjectInfoDTO(project.getName(), project.getSlug(), project.getGithubRepo(), publishedReleasesInfo.reversed());
     }
 
     private ReleaseInfoDTO convertToDTO(Release release) {
@@ -103,8 +103,6 @@ public class InformationService {
         return new ReleaseDetailDTO(
                 release.getVersion(),
                 release.getDescription(),
-                release.getCreatedAt(),
-                release.getStatus().toString(),
                 release.getReleaseDate(),
                 features,
                 fixes,
