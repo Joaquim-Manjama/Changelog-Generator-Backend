@@ -9,6 +9,7 @@ import JoaquimManjama.ChangelogGenerator.Repositories.UserRepository;
 import JoaquimManjama.ChangelogGenerator.Services.GitHubApiService;
 import JoaquimManjama.ChangelogGenerator.Services.GitHubService;
 import JoaquimManjama.ChangelogGenerator.Services.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,6 +26,9 @@ public class GitHubControler {
     private final GitHubApiService apiService;
     private final UserService userService;
     private final UserRepository userRepository;
+
+    @Value("${host}")
+    private String host;
 
     public GitHubControler(GitHubService service, GitHubApiService apiService, UserService userService, UserRepository userRepository) {
         this.service = service;
@@ -58,7 +62,7 @@ public class GitHubControler {
 
         // Redirect to frontend
         return ResponseEntity.status(HttpStatus.FOUND)
-                .header("Location", "http://localhost:5173/dashboard?github=connected")
+                .header("Location", "http://" + host + ":5173/dashboard?github=connected")
                 .build();
     }
 
