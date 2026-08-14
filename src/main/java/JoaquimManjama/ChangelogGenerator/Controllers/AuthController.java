@@ -1,4 +1,4 @@
-package JoaquimManjama.ChangelogGenerator.Controlers;
+package JoaquimManjama.ChangelogGenerator.Controllers;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-public class AuthControler {
+public class AuthController {
 
     @Autowired
     AuthService service;

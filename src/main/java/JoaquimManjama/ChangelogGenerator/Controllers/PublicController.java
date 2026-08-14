@@ -1,13 +1,8 @@
-package JoaquimManjama.ChangelogGenerator.Controlers;
+package JoaquimManjama.ChangelogGenerator.Controllers;
 
-import JoaquimManjama.ChangelogGenerator.DTOs.ProjectDTO;
 import JoaquimManjama.ChangelogGenerator.DTOs.ProjectInfoDTO;
-import JoaquimManjama.ChangelogGenerator.DTOs.ReleaseDTO;
 import JoaquimManjama.ChangelogGenerator.DTOs.ReleaseDetailDTO;
-import JoaquimManjama.ChangelogGenerator.Models.Release;
 import JoaquimManjama.ChangelogGenerator.Services.InformationService;
-import JoaquimManjama.ChangelogGenerator.Services.ProjectService;
-import JoaquimManjama.ChangelogGenerator.Services.ReleaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/public")
-public class PublicControler {
+public class PublicController {
 
     @Autowired
     private InformationService  informationService;

@@ -1,4 +1,4 @@
-package JoaquimManjama.ChangelogGenerator.Controlers;
+package JoaquimManjama.ChangelogGenerator.Controllers;
 
 import JoaquimManjama.ChangelogGenerator.DTOs.ProjectDTO;
 import JoaquimManjama.ChangelogGenerator.DTOs.ProjectRequestDTO;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController()
 @RequestMapping("projects")
-public class ProjectControler {
+public class ProjectController {
     @Autowired
     private ProjectService service;
 
