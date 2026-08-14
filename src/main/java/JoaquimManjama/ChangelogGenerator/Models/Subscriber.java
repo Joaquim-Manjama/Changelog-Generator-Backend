@@ -28,9 +28,6 @@ public class Subscriber {
     private Long email;
 
     @Column(nullable=false)
-    private Boolean confirmed;
-
-    @Column(nullable=false)
     private LocalDateTime createdAt;
 
     @PrePersist
