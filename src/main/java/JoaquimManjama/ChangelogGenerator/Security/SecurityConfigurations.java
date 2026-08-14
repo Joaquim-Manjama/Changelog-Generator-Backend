@@ -30,7 +30,7 @@ public class SecurityConfigurations {
 
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**", "/projects/**", "/github/**", "/public/**").permitAll()
+                        .requestMatchers("/auth/**", "/projects/**", "/github/**", "/public/**", "/subscription").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

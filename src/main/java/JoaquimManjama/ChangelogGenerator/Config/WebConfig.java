@@ -15,6 +15,12 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedHeaders("*")
                 .allowCredentials(true);
 
+        registry.addMapping("/subscription")
+                .allowedOrigins("http://localhost:5173")
+                .allowedMethods("POST", "DELETE")
+                .allowedHeaders("*")
+                .allowCredentials(true);
+
         registry.addMapping("/auth/**")
                 .allowedOrigins("http://localhost:5173")  // Your React app URLs
                 .allowedMethods("GET", "POST")
@@ -22,7 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowCredentials(true);
 
         registry.addMapping("/projects/**")
-                .allowedOrigins("http://localhost5173")  // Your React app URLs
+                .allowedOrigins("http://localhost:5173")  // Your React app URLs
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
                 .allowedHeaders("*")
                 .allowCredentials(true);

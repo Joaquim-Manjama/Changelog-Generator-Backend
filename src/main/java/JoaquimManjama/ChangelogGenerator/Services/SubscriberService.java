@@ -27,7 +27,7 @@ public class SubscriberService {
         Optional<Subscriber> possibleSubscriber = subscriberRepository.findByEmail(subscriberRequestDTO.email());
 
         if (possibleSubscriber.isPresent()) {
-            return new ResponseEntity<>("Email already Exists", HttpStatus.ALREADY_REPORTED);
+            return new ResponseEntity<>("Email already Exists", HttpStatus.CONFLICT);
         }
 
         Optional<Project> project =  projectRepository.findBySlug(subscriberRequestDTO.slug());
@@ -52,7 +52,7 @@ public class SubscriberService {
 
             if (possibleSubscriber.isPresent()) {
                 subscriberRepository.delete(possibleSubscriber.get());
-                return new ResponseEntity<>("Subscriber Deleted!", HttpStatus.OK);
+                return new ResponseEntity<>("Subscriber Deleted!", HttpStatus.NO_CONTENT);
             }
 
             return new ResponseEntity<>("Subscriber Not Found!", HttpStatus.NOT_FOUND);
