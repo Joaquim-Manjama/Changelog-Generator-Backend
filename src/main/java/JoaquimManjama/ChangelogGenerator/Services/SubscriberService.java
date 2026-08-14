@@ -22,12 +22,12 @@ public class SubscriberService {
     @Autowired
     private ProjectRepository projectRepository;
 
-    public ResponseEntity addSubscriber(SubscriberRequestDTO subscriberRequestDTO) {
+    public ResponseEntity<?> addSubscriber(SubscriberRequestDTO subscriberRequestDTO) {
 
         Optional<Subscriber> possibleSubscriber = subscriberRepository.findByEmail(subscriberRequestDTO.email());
 
         if (possibleSubscriber.isPresent()) {
-            return new ResponseEntity("Email already Exists", HttpStatus.ALREADY_REPORTED);
+            return new ResponseEntity<>("Email already Exists", HttpStatus.ALREADY_REPORTED);
         }
 
         Optional<Project> project =  projectRepository.findBySlug(subscriberRequestDTO.slug());
@@ -37,14 +37,14 @@ public class SubscriberService {
             newSubscriber.setEmail(subscriberRequestDTO.email());
             newSubscriber.setProject(project.get());
             subscriberRepository.save(newSubscriber);
-            return new ResponseEntity("Subscriber Created!", HttpStatus.CREATED);
+            return new ResponseEntity<>("Subscriber Created!", HttpStatus.CREATED);
         }
 
-        return new ResponseEntity("Project Not Found!", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Project Not Found!", HttpStatus.NOT_FOUND);
     }
 
     @Transactional
-    public ResponseEntity deleteSubscriber(String email, String slug) {
+    public ResponseEntity<?> deleteSubscriber(String email, String slug) {
         Optional<Project> project = projectRepository.findBySlug(slug);
 
         if (project.isPresent()) {
@@ -52,12 +52,12 @@ public class SubscriberService {
 
             if (possibleSubscriber.isPresent()) {
                 subscriberRepository.delete(possibleSubscriber.get());
-                return new ResponseEntity("Subscriber Deleted!", HttpStatus.OK);
+                return new ResponseEntity<>("Subscriber Deleted!", HttpStatus.OK);
             }
 
-            return new ResponseEntity("Subscriber Not Found!", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Subscriber Not Found!", HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity("Project Not Found!", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Project Not Found!", HttpStatus.NOT_FOUND);
     }
 }

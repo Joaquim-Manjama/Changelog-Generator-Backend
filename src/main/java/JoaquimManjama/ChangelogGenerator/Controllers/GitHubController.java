@@ -1,4 +1,4 @@
-package JoaquimManjama.ChangelogGenerator.Controlers;
+package JoaquimManjama.ChangelogGenerator.Controllers;
 
 import JoaquimManjama.ChangelogGenerator.DTOs.GitHubChangeDTO;
 import JoaquimManjama.ChangelogGenerator.DTOs.GitHubCommitDTO;
@@ -20,7 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/github")
-public class GitHubControler {
+public class GitHubController {
 
     private final GitHubService service;
     private final GitHubApiService apiService;
@@ -30,7 +30,7 @@ public class GitHubControler {
     @Value("${host}")
     private String host;
 
-    public GitHubControler(GitHubService service, GitHubApiService apiService, UserService userService, UserRepository userRepository) {
+    public GitHubController(GitHubService service, GitHubApiService apiService, UserService userService, UserRepository userRepository) {
         this.service = service;
         this.apiService = apiService;
         this.userService = userService;

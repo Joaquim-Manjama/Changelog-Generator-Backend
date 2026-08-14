@@ -1,4 +1,4 @@
-package JoaquimManjama.ChangelogGenerator.Controlers;
+package JoaquimManjama.ChangelogGenerator.Controllers;
 
 import JoaquimManjama.ChangelogGenerator.DTOs.ChangelogEntryDTO;
 import JoaquimManjama.ChangelogGenerator.DTOs.ChangelogEntryRequestDTO;

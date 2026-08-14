@@ -1,4 +1,4 @@
-package JoaquimManjama.ChangelogGenerator.Controlers;
+package JoaquimManjama.ChangelogGenerator.Controllers;
 
 import JoaquimManjama.ChangelogGenerator.DTOs.ReleaseDTO;
 import JoaquimManjama.ChangelogGenerator.DTOs.ReleaseRequestDTO;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("projects")
-public class ReleaseControler {
+public class ReleaseController {
 
     @Autowired
     private ReleaseService service;

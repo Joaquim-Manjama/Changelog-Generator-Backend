@@ -1,4 +1,4 @@
-package JoaquimManjama.ChangelogGenerator.Controlers;
+package JoaquimManjama.ChangelogGenerator.Controllers;
 
 import JoaquimManjama.ChangelogGenerator.DTOs.UserDTO;
 import JoaquimManjama.ChangelogGenerator.Models.User;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController()
 @RequestMapping("users")
-public class UserControler {
+public class UserController {
 
     @Autowired
     private UserService service;
