@@ -25,7 +25,7 @@ public class Subscriber {
     private Project project;
 
     @Column(nullable=false, length = 255)
-    private Long email;
+    private String email;
 
     @Column(nullable=false)
     private LocalDateTime createdAt;
