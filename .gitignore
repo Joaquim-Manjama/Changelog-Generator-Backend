@@ -34,7 +34,7 @@ build/
 
 ### Others ###
 files/
-.properties
-.yml
+*.properties
+*.yml
 
 Main.java
