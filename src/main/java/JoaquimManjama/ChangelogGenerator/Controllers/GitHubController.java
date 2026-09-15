@@ -27,8 +27,8 @@ public class GitHubController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    @Value("${host}")
-    private String host;
+    @Value("${CLIENT_URL}")
+    private String clientUrl;
 
     public GitHubController(GitHubService service, GitHubApiService apiService, UserService userService, UserRepository userRepository) {
         this.service = service;
@@ -62,7 +62,7 @@ public class GitHubController {
 
         // Redirect to frontend
         return ResponseEntity.status(HttpStatus.FOUND)
-                .header("Location", "http://" + host + ":5173/dashboard?github=connected")
+                .header("Location", clientUrl +"/dashboard?github=connected")
                 .build();
     }
 
